@@ -177,11 +177,8 @@ def eda(df: pd.DataFrame) -> None:
     print(status_counts)
     print(f"\nBusiness Status Percentages:")
     print(df['Business_Status'].value_counts(normalize=True) * 100)
-
-    # =====================================================
-    # EXPLORATORY DATA ANALYSIS
-    # =====================================================
-
+    
+    #plots
     print("\n" + "="*50)
     print("EXPLORATORY DATA ANALYSIS")
     print("="*50)

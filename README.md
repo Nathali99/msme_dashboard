@@ -31,7 +31,11 @@ msme-dashboard/
 
 ### Run the code in GitHub CodeSpaces
 
-First install the required libraries
+In GitHub CodeSpace, create a new codespace and select Nathali99/msme_dashboard as the repository.
+
+In the terminal,
+
+You can install the required libraries
 
 ```bash
 pip install -r requirements.txt
