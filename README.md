@@ -10,7 +10,8 @@ msme-dashboard/
 ├── dashboard.py
 ├── msme_training_pipeline.py
 ├── requirements.txt
-├── sample_input_template.csv
+├── data/
+│   └── final_dataset.csv
 ├── msme_outputs/
 │   └── msme_model_bundle.joblib   # created after training, or add your saved bundle here
 ├── notebooks/
@@ -25,7 +26,6 @@ msme-dashboard/
 - `app.py`: the main Streamlit dashboard for local use and Streamlit Community Cloud.
 - `dashboard.py`: same dashboard code under an alternate name.
 - `msme_training_pipeline.py`: trains the models, selects the best one, optionally calibrates it, and saves the final bundle.
-- `sample_input_template.csv`: a simple template showing the input columns expected by the dashboard and pipeline.
 - `notebooks/`: notebook versions of the training and dashboard code.
 - `msme_outputs/msme_model_bundle.joblib`: the saved trained model bundle used by the dashboard.
 
