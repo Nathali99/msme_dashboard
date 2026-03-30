@@ -46,9 +46,14 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Option 2: Train the model first, then run the dashboard
+## Option 2: Run the code in GitHub CodeSpaces
 
-If you want others to reproduce the training step, add your dataset file as:
+First install the required libraries
+
+```bash
+pip install -r requirements.txt
+```
+Add your datset to a separate folder called data  as:
 
 ```text
 final_dataset.csv
@@ -64,37 +69,13 @@ This will create:
 
 ```text
 msme_outputs/msme_model_bundle.joblib
+msme_outputs/test_predictions.csv
+msme_outputs/training_summary.json
 ```
 
 After that, start the dashboard:
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
 
-## Deploy on Streamlit Community Cloud
-
-1. Push this repository to GitHub.
-2. Sign in to Streamlit Community Cloud with GitHub.
-3. Create a new app from this repository.
-4. Set the main file path to `app.py`.
-5. Deploy.
-
-If your repository already includes `msme_outputs/msme_model_bundle.joblib`, the app should run immediately.
-
-## Important notes
-
-- Do **not** upload `final_dataset.csv` publicly if it contains confidential or sensitive business data.
-- If the model bundle is too large for normal GitHub upload, use **Git LFS** or upload the model bundle separately and place it in `msme_outputs/` before running the app.
-- The dashboard uses the saved model bundle, so the predictions and what-if analysis stay consistent with the trained model.
-
-## Suggested Git commands
-
-```bash
-git init
-git add .
-git commit -m "Initial MSME dashboard repository"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/msme-dashboard.git
-git push -u origin main
-```

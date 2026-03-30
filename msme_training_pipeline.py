@@ -575,7 +575,7 @@ def main(
 if __name__ == "__main__":
     # Edit the paths below if needed.
     main(
-        csv_path="/mnt/data/final_dataset.csv",
-        output_dir="/mnt/data/msme_outputs",
+        csv_path="data/final_dataset.csv",
+        output_dir="msme_outputs/",
         n_iter=20,
     )
