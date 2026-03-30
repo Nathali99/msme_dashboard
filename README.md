@@ -36,13 +36,8 @@ First install the required libraries
 ```bash
 pip install -r requirements.txt
 ```
-Add your datset to a separate folder called data  as:
 
-```text
-final_dataset.csv
-```
-
-Then run:
+Then run to train the model (This step is not mandatory as the final model is already saved in the msme_outputs folder):
 
 ```bash
 python msme_training_pipeline.py
