@@ -1,3 +1,8 @@
+'''
+python -m pip install -r requirements.txt
+python -m streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+'''
+
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -329,7 +334,7 @@ def build_curve(
     multipliers: np.ndarray | None = None,
 ) -> pd.DataFrame:
     if multipliers is None:
-        multipliers = np.linspace(0.1, 2.5, 121)
+        multipliers = np.linspace(0.1, 5.0, 150)
 
     rows = []
     for mult in multipliers:
@@ -567,11 +572,11 @@ def main() -> None:
 
         col_a, col_b, col_c = st.columns(3)
         with col_a:
-            revenue_mult = st.slider("Revenue last-year multiplier", min_value=0.1, max_value=2.5, value=1.0, step=0.01)
+            revenue_mult = st.slider("Revenue last-year multiplier", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
         with col_b:
-            expenditure_mult = st.slider("Expenditure last-year multiplier", min_value=0.1, max_value=2.5, value=1.0, step=0.01)
+            expenditure_mult = st.slider("Expenditure last-year multiplier", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
         with col_c:
-            staff_mult = st.slider("Staff last-year multiplier", min_value=0.1, max_value=2.5, value=1.0, step=0.01)
+            staff_mult = st.slider("Staff last-year multiplier", min_value=1, max_value=10, value=1.0, step=1)
 
         modified_df, scenario_base_summary = modify_raw_df(
             raw_df,
@@ -605,89 +610,16 @@ def main() -> None:
             format_display_number(pd.to_numeric(modified_df.at[0, LAST_YEAR_EXPENDITURE_COL], errors="coerce")),
         )
 
+        delta_cols[3].metric(
+            "Scenario staff last-year",
+            format_display_number(pd.to_numeric(modified_df.at[0, LAST_YEAR_STAFF_COL], errors="coerce")),
+        )
+
         st.markdown("**Scenario bases used**")
         st.dataframe(scenario_base_summary, use_container_width=True)
 
         with st.expander("See modified computed features"):
             st.dataframe(modified_features.T.rename(columns={0: "value"}), use_container_width=True)
-
-        st.subheader("Flip-point analysis")
-        curves = {
-            "revenue": build_curve(bundle, raw_df, "revenue", references),
-            "expenditure": build_curve(bundle, raw_df, "expenditure", references),
-            "staff": build_curve(bundle, raw_df, "staff", references),
-        }
-        flip_table = pd.DataFrame(
-            [
-                {"variable": "Revenue", **find_flip_point_from_curve(curves["revenue"], base_result["predicted_class"])},
-                {"variable": "Expenditure", **find_flip_point_from_curve(curves["expenditure"], base_result["predicted_class"])},
-                {"variable": "Staff", **find_flip_point_from_curve(curves["staff"], base_result["predicted_class"])},
-            ]
-        )
-        st.dataframe(flip_table, use_container_width=True)
-        st.caption(
-            "The flip point shown is the nearest tested multiplier to 1.00 where the predicted class changes. "
-            "If no row appears except 'No flip in tested range', the model stayed on the same side of the decision threshold across the tested range."
-        )
-
-        st.subheader("Combined scenarios")
-        factor = st.slider("Combined scenario factor", min_value=1.0, max_value=2.5, value=1.20, step=0.01)
-        improve_result, _, improve_summary = scenario_result(bundle, raw_df, references, "Improve", factor)
-        stress_result, _, stress_summary = scenario_result(bundle, raw_df, references, "Stress", factor)
-        combo_df = pd.DataFrame(
-            [
-                {
-                    "scenario": "Improve",
-                    "rule": "Revenue × factor, Expenditure ÷ factor, Staff ÷ factor",
-                    "predicted_status": status_label(improve_result["predicted_class"]),
-                    "p_failed": improve_result["p_failed"],
-                },
-                {
-                    "scenario": "Stress",
-                    "rule": "Revenue ÷ factor, Expenditure × factor, Staff × factor",
-                    "predicted_status": status_label(stress_result["predicted_class"]),
-                    "p_failed": stress_result["p_failed"],
-                },
-            ]
-        )
-        st.dataframe(combo_df, use_container_width=True)
-        with st.expander("See combined scenario bases used"):
-            st.markdown("**Improve**")
-            st.dataframe(improve_summary, use_container_width=True)
-            st.markdown("**Stress**")
-            st.dataframe(stress_summary, use_container_width=True)
-
-        st.subheader("Sensitivity curves")
-        fig = make_curve_plot(
-            curves,
-            base_result=base_result,
-            selected_multipliers={
-                "revenue": revenue_mult,
-                "expenditure": expenditure_mult,
-                "staff": staff_mult,
-            },
-        )
-        st.pyplot(fig)
-
-        st.subheader("Scenario heatmap")
-        st.write(
-            "This heatmap shows how the predicted failure probability changes across revenue and expenditure combinations while keeping the chosen staff multiplier fixed."
-        )
-        heatmap_fig = make_probability_heatmap(bundle, raw_df, references, staff_multiplier=staff_mult)
-        st.pyplot(heatmap_fig)
-
-        with st.expander("See curve data"):
-            curve_data = []
-            for name, df_curve in curves.items():
-                temp = df_curve.copy()
-                temp.insert(0, "variable", name)
-                curve_data.append(temp)
-            st.dataframe(pd.concat(curve_data, ignore_index=True), use_container_width=True)
-
-        st.info(
-            "These what-if results are model-based sensitivity checks. They show how the saved trained model responds to input changes, not guaranteed real-world causal effects."
-        )
-
 
 if __name__ == "__main__":
     main()

@@ -13,7 +13,7 @@ msme-dashboard/
 ├── data/
 │   └── final_dataset.csv
 ├── msme_outputs/
-│   └── msme_model_bundle.joblib   # created after training, or add your saved bundle here
+│   └── msme_model_bundle.joblib  
 ├── notebooks/
 │   ├── model_training.ipynb
 │   └── dashboard.ipynb
@@ -29,24 +29,7 @@ msme-dashboard/
 - `notebooks/`: notebook versions of the training and dashboard code.
 - `msme_outputs/msme_model_bundle.joblib`: the saved trained model bundle used by the dashboard.
 
-## Option 1: Run the dashboard with an existing model bundle
-
-Place your trained model bundle at:
-
-```text
-msme_outputs/msme_model_bundle.joblib
-```
-
-Then install the dependencies and run the dashboard:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/msme-dashboard.git
-cd msme-dashboard
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-## Option 2: Run the code in GitHub CodeSpaces
+### Run the code in GitHub CodeSpaces
 
 First install the required libraries
 
@@ -76,6 +59,6 @@ msme_outputs/training_summary.json
 After that, start the dashboard:
 
 ```bash
+python -m pip install -r requirements.txt
 python -m streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
-
