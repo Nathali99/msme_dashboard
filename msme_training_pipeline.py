@@ -1,23 +1,3 @@
-
-"""
-MSME failure modelling pipeline
-
-What this script fixes compared with the original notebook:
-- removes leakage from full-data imputation
-- avoids using Active_upto_Year as a predictor or masking signal
-- keeps repeated IDs in the same split with grouped splitting
-- uses a real train / validation / test workflow
-- tunes models only on the training split
-- calibrates the chosen model without touching the test split
-- saves one deployable bundle for the dashboard
-
-Target convention in this script:
-    1 = Failed
-    0 = Active
-"""
-
-from __future__ import annotations
-
 import json
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -48,6 +28,8 @@ from sklearn.model_selection import RandomizedSearchCV, StratifiedGroupKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+
+from matplotlib import pyplot as plt
 
 
 RANDOM_STATE = 42
@@ -149,14 +131,8 @@ def build_feature_frame(raw_df: pd.DataFrame) -> pd.DataFrame:
     features["Revenue_trend"] = trend_slope_df(revenue)
     features["Expenditure_trend"] = trend_slope_df(expenditure)
     features["Staff_trend"] = trend_slope_df(staff)
-    features["Profit_trend"] = trend_slope_df(profit)
 
     features["Loss_years"] = (profit < 0).sum(axis=1)
-    features["Business_Age"] = OBSERVATION_YEAR - open_year
-    features["Open_Year_missing"] = open_year.isna().astype(int)
-
-    features["Business_Age"] = features["Business_Age"].where(features["Business_Age"] >= 0, np.nan)
-
     return features
 
 
@@ -177,6 +153,104 @@ def load_dataset(csv_path: str | Path) -> pd.DataFrame:
 
     return df
 
+def eda(df: pd.DataFrame) -> None:
+    # Basic dataset information
+    print("\n" + "="*50)
+    print("DATASET OVERVIEW")
+    print("="*50)
+    print(df.head())
+    print(f"\nDataset Info:")
+    print(f"Total records: {len(df)}")
+    print(f"Total features: {len(df.columns)}")
+
+    # Check for missing values
+    print(f"\nMissing values:")
+    missing_values = df.isnull().sum()
+    print(missing_values[missing_values > 0])
+
+    # Target variable analysis
+    print("\n" + "="*50)
+    print("TARGET VARIABLE ANALYSIS")
+    print("="*50)
+    print(f"Business Status Distribution:")
+    status_counts = df['Business_Status'].value_counts()
+    print(status_counts)
+    print(f"\nBusiness Status Percentages:")
+    print(df['Business_Status'].value_counts(normalize=True) * 100)
+
+    # =====================================================
+    # EXPLORATORY DATA ANALYSIS
+    # =====================================================
+
+    print("\n" + "="*50)
+    print("EXPLORATORY DATA ANALYSIS")
+    print("="*50)
+
+    # Set up plotting style
+    plt.style.use('default')
+    fig_size = (15, 10)
+
+    # 1. Business Status Distribution
+    plt.figure(figsize=(12, 8))
+    status_counts = df['Business_Status'].value_counts()
+    plt.subplot(2, 2, 1)
+    status_counts.plot(kind='bar', color=['green', 'red'])
+    plt.title('Business Status Distribution')
+    plt.xlabel('Status (1=Active, 0=Closed)')
+    plt.ylabel('Count')
+    plt.xticks(rotation=0)
+
+    # revenue over years
+
+    revenue_cols = ['Total_Revenue_four_years_before', 'Total_Revenue_three_years_before','Total_Revenue_two_years_before', 'Total_Revenue_one_years_before']
+
+    revenue_by_status = df.groupby('Business_Status')[revenue_cols].mean()
+
+    plt.figure(figsize=(8,5))
+    for status in revenue_by_status.index:
+        plt.plot(revenue_cols, revenue_by_status.loc[status], marker='o', label='Active' if status==1 else 'Closed')
+
+    plt.title('Average Revenue by Business Status Over Years')
+    plt.xlabel('Year')
+    plt.ylabel('Average Revenue')
+    plt.legend()
+    plt.xticks(revenue_cols, ['2020', '2021', '2022', '2023'])
+    plt.grid(True)
+    plt.show()
+
+    # Staff trends over years
+
+    staff_cols = ['Staff_four_years_before', 'Staff_three_years_before', 'Staff_two_years_before', 'Staff_one_years_before']
+    staff_by_status = df.groupby('Business_Status')[staff_cols].mean()
+
+    plt.figure(figsize=(10, 6))
+    for status in staff_by_status.index:
+        plt.plot(staff_cols, staff_by_status.loc[status], marker='o', label='Active' if status==1 else 'Closed')
+
+    plt.title('Average Staff Count by Business Status Over Years')
+    plt.xlabel('Year')
+    plt.ylabel('Average Staff Count')
+    plt.legend()
+    plt.xticks(staff_cols, ['2020', '2021', '2022', '2023'])
+    plt.grid(True)
+    plt.show()
+
+    # Expenditure over years
+
+    staff_cols = ['Total_expenditure_four_years_before', 'Total_expenditure_three_years_before', 'Total_expenditure_two_years_before', 'Total_expenditure_one_years_before']
+    staff_by_status = df.groupby('Business_Status')[staff_cols].mean()
+
+    plt.figure(figsize=(10, 6))
+    for status in staff_by_status.index:
+        plt.plot(staff_cols, staff_by_status.loc[status], marker='o', label='Active' if status==1 else 'Closed')
+
+    plt.title('Average Total expenditure Count by Business Status Over Years')
+    plt.xlabel('Year')
+    plt.ylabel('Average Staff Count')
+    plt.legend()
+    plt.xticks(staff_cols, ['2020', '2021', '2022', '2023'])
+    plt.grid(True)
+    plt.show()
 
 def make_splits(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     y_failed = (pd.to_numeric(df["Business_Status"], errors="coerce") == 0).astype(int)
@@ -479,26 +553,36 @@ def fit_final_model(
 
 
 def main(
-    csv_path: str = "final_dataset.csv",
-    output_dir: str = "msme_outputs",
+    csv_path: str = "/mnt/data/final_dataset.csv",
+    output_dir: str = "/mnt/data/msme_outputs",
     n_iter: int = 20,
 ) -> None:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
 
+    #data loading
     df = load_dataset(csv_path)
+
+    #run eda
+    eda(df)
+
+    #data split
     train_df, val_df, test_df = make_splits(df)
 
+    #feature engineering
     X_train, y_train = build_xy(train_df)
     X_val, y_val = build_xy(val_df)
     X_test, y_test = build_xy(test_df)
 
+    #model training
     tuned = tune_models(X_train, y_train, train_df["ID"], n_iter=n_iter)
 
+    #model selection
     selection = select_best_model(tuned, X_train, y_train, X_val, y_val)
     best_name = selection["best_name"]
     best_info = selection["best_info"]
 
+    #calibrate the model if needed
     calibration = calibrate_if_helpful(
         best_name=best_name,
         best_model_fitted=best_info["fitted_on_train"],
@@ -508,6 +592,7 @@ def main(
 
     X_train_val = pd.concat([X_train, X_val], axis=0).reset_index(drop=True)
     y_train_val = pd.concat([y_train, y_val], axis=0).reset_index(drop=True)
+
 
     final_model = fit_final_model(
         best_estimator=best_info["best_estimator"],
@@ -576,6 +661,6 @@ if __name__ == "__main__":
     # Edit the paths below if needed.
     main(
         csv_path="data/final_dataset.csv",
-        output_dir="msme_outputs/",
+        output_dir="msme_outputs",
         n_iter=20,
     )
