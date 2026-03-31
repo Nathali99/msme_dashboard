@@ -421,7 +421,7 @@ def main() -> None:
         with col_b:
             expenditure_mult = st.slider("Expenditure last-year multiplier", min_value=0.1, max_value=5.0, value=1.0, step=0.1)
         with col_c:
-            staff_mult = st.slider("Staff last-year multiplier", min_value=0.1, max_value=10, value=1.0, step=1)
+            staff_mult = st.slider("Staff last-year multiplier", min_value=0.1, max_value=10.0, value=1.0, step=1.0)
 
         modified_df, scenario_base_summary = modify_raw_df(
             raw_df,
