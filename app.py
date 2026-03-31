@@ -440,7 +440,7 @@ def main() -> None:
         st.markdown("**Scenario prediction**")
         render_prediction_summary(modified_result, bundle.get("model_name", "Unknown"))
 
-        delta_cols = st.columns(3)
+        delta_cols = st.columns(4)
         delta_cols[0].metric(
             "Failure probability change",
             f"{modified_result['p_failed'] * 100:.2f}%",
