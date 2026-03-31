@@ -58,6 +58,5 @@ msme_outputs/training_summary.json
 After that, start the dashboard:
 
 ```bash
-python -m pip install -r requirements.txt
 python -m streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
