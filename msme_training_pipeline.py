@@ -131,8 +131,13 @@ def build_feature_frame(raw_df: pd.DataFrame) -> pd.DataFrame:
     features["Revenue_trend"] = trend_slope_df(revenue)
     features["Expenditure_trend"] = trend_slope_df(expenditure)
     features["Staff_trend"] = trend_slope_df(staff)
+    features["Profit_trend"] = trend_slope_df(profit)
 
     features["Loss_years"] = (profit < 0).sum(axis=1)
+    features["Business_Age"] = OBSERVATION_YEAR - open_year
+    features["Open_Year_missing"] = open_year.isna().astype(int)
+    features["Business_Age"] = features["Business_Age"].where(features["Business_Age"] >= 0, np.nan)
+    
     return features
 
 
