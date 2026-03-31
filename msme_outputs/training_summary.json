@@ -8,108 +8,109 @@
     "failed_count_total": 168
   },
   "best_model": {
-    "name": "Random Forest",
-    "best_cv_pr_auc_failed": 0.940952217270174,
+    "name": "XGBoost",
+    "best_cv_pr_auc_failed": 0.9451164944137933,
     "best_params": {
+      "model__subsample": 0.85,
       "model__n_estimators": 400,
-      "model__min_samples_split": 2,
-      "model__min_samples_leaf": 1,
-      "model__max_features": "log2",
-      "model__max_depth": 30
+      "model__min_child_weight": 5,
+      "model__max_depth": 3,
+      "model__learning_rate": 0.1,
+      "model__colsample_bytree": 0.7
     }
   },
   "validation_ranking": [
     {
+      "model_name": "XGBoost",
+      "cv_pr_auc_failed": 0.9451164944137933,
+      "accuracy": 0.9415584415584416,
+      "balanced_accuracy": 0.8887254901960784,
+      "precision_failed": 0.9310344827586207,
+      "recall_failed": 0.7941176470588235,
+      "f1_failed": 0.8571428571428571,
+      "roc_auc_failed": 0.9691176470588234,
+      "pr_auc_failed": 0.922294633420225,
+      "brier_failed": 0.056763842701911926
+    },
+    {
       "model_name": "Random Forest",
-      "cv_pr_auc_failed": 0.940952217270174,
+      "cv_pr_auc_failed": 0.9377033660009936,
       "accuracy": 0.9155844155844156,
-      "balanced_accuracy": 0.8299019607843137,
-      "precision_failed": 0.92,
-      "recall_failed": 0.6764705882352942,
-      "f1_failed": 0.7796610169491526,
-      "roc_auc_failed": 0.9697303921568627,
-      "pr_auc_failed": 0.9259550263351264,
-      "brier_failed": 0.05501712662337662
+      "balanced_accuracy": 0.8404411764705882,
+      "precision_failed": 0.8888888888888888,
+      "recall_failed": 0.7058823529411765,
+      "f1_failed": 0.7868852459016393,
+      "roc_auc_failed": 0.9651960784313725,
+      "pr_auc_failed": 0.9119212786993124,
+      "brier_failed": 0.05902371094805131
     },
     {
       "model_name": "LightGBM",
-      "cv_pr_auc_failed": 0.9442628204519344,
-      "accuracy": 0.9415584415584416,
-      "balanced_accuracy": 0.8992647058823529,
-      "precision_failed": 0.9032258064516129,
-      "recall_failed": 0.8235294117647058,
-      "f1_failed": 0.8615384615384616,
-      "roc_auc_failed": 0.9620098039215687,
-      "pr_auc_failed": 0.9258291323971689,
-      "brier_failed": 0.05227232765683031
-    },
-    {
-      "model_name": "XGBoost",
-      "cv_pr_auc_failed": 0.9483755348350437,
+      "cv_pr_auc_failed": 0.9382691393944187,
       "accuracy": 0.9090909090909091,
-      "balanced_accuracy": 0.8678921568627451,
-      "precision_failed": 0.7941176470588235,
-      "recall_failed": 0.7941176470588235,
-      "f1_failed": 0.7941176470588235,
-      "roc_auc_failed": 0.9590686274509804,
-      "pr_auc_failed": 0.9189864666268192,
-      "brier_failed": 0.05875168368220329
+      "balanced_accuracy": 0.8362745098039216,
+      "precision_failed": 0.8571428571428571,
+      "recall_failed": 0.7058823529411765,
+      "f1_failed": 0.7741935483870968,
+      "roc_auc_failed": 0.9475490196078431,
+      "pr_auc_failed": 0.9022163117349804,
+      "brier_failed": 0.06585573323744714
     },
     {
       "model_name": "Logistic Regression",
-      "cv_pr_auc_failed": 0.8975927911578132,
-      "accuracy": 0.9025974025974026,
-      "balanced_accuracy": 0.8637254901960785,
-      "precision_failed": 0.7714285714285715,
+      "cv_pr_auc_failed": 0.8896867099891397,
+      "accuracy": 0.8961038961038961,
+      "balanced_accuracy": 0.8595588235294118,
+      "precision_failed": 0.75,
       "recall_failed": 0.7941176470588235,
-      "f1_failed": 0.782608695652174,
-      "roc_auc_failed": 0.9495098039215686,
-      "pr_auc_failed": 0.9029709998891997,
-      "brier_failed": 0.07024866198704445
+      "f1_failed": 0.7714285714285715,
+      "roc_auc_failed": 0.945343137254902,
+      "pr_auc_failed": 0.8979208487865569,
+      "brier_failed": 0.07329874993928963
     }
   ],
   "calibration_choice": {
     "used_calibrated_model": true,
     "uncalibrated_validation_metrics": {
-      "accuracy": 0.9155844155844156,
-      "balanced_accuracy": 0.8299019607843137,
-      "precision_failed": 0.92,
-      "recall_failed": 0.6764705882352942,
-      "f1_failed": 0.7796610169491526,
-      "roc_auc_failed": 0.9697303921568627,
-      "pr_auc_failed": 0.9259550263351264,
-      "brier_failed": 0.05501712662337662
+      "accuracy": 0.9415584415584416,
+      "balanced_accuracy": 0.8887254901960784,
+      "precision_failed": 0.9310344827586207,
+      "recall_failed": 0.7941176470588235,
+      "f1_failed": 0.8571428571428571,
+      "roc_auc_failed": 0.9691176470588234,
+      "pr_auc_failed": 0.922294633420225,
+      "brier_failed": 0.056763842701911926
     },
     "calibrated_validation_metrics": {
-      "accuracy": 0.9285714285714286,
-      "balanced_accuracy": 0.8803921568627451,
-      "precision_failed": 0.8709677419354839,
-      "recall_failed": 0.7941176470588235,
-      "f1_failed": 0.8307692307692308,
-      "roc_auc_failed": 0.9697303921568627,
-      "pr_auc_failed": 0.9259550263351264,
-      "brier_failed": 0.05360603630967565
+      "accuracy": 0.935064935064935,
+      "balanced_accuracy": 0.8740196078431373,
+      "precision_failed": 0.9285714285714286,
+      "recall_failed": 0.7647058823529411,
+      "f1_failed": 0.8387096774193549,
+      "roc_auc_failed": 0.9691176470588234,
+      "pr_auc_failed": 0.922294633420225,
+      "brier_failed": 0.056497763871029665
     }
   },
   "test_metrics": {
     "accuracy": 0.961038961038961,
-    "balanced_accuracy": 0.9117647058823529,
-    "precision_failed": 1.0,
-    "recall_failed": 0.8235294117647058,
-    "f1_failed": 0.9032258064516129,
-    "roc_auc_failed": 0.9580882352941176,
-    "pr_auc_failed": 0.9343592043075503,
-    "brier_failed": 0.03996046262791835
+    "balanced_accuracy": 0.9223039215686275,
+    "precision_failed": 0.9666666666666667,
+    "recall_failed": 0.8529411764705882,
+    "f1_failed": 0.90625,
+    "roc_auc_failed": 0.9480392156862746,
+    "pr_auc_failed": 0.9387257221781362,
+    "brier_failed": 0.03722880064461609
   },
   "test_confusion_matrix": [
     [
-      120,
-      0
+      119,
+      1
     ],
     [
-      6,
-      28
+      5,
+      29
     ]
   ],
-  "test_classification_report": "              precision    recall  f1-score   support\n\n      Active       0.95      1.00      0.98       120\n      Failed       1.00      0.82      0.90        34\n\n    accuracy                           0.96       154\n   macro avg       0.98      0.91      0.94       154\nweighted avg       0.96      0.96      0.96       154\n"
+  "test_classification_report": "              precision    recall  f1-score   support\n\n      Active       0.96      0.99      0.98       120\n      Failed       0.97      0.85      0.91        34\n\n    accuracy                           0.96       154\n   macro avg       0.96      0.92      0.94       154\nweighted avg       0.96      0.96      0.96       154\n"
 }
