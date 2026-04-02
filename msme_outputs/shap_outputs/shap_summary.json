@@ -1,0 +1,65 @@
+{
+  "dataset_path": "data/final_dataset.csv",
+  "model_bundle_path": "msme_outputs/msme_model_bundle.joblib",
+  "model_name": "XGBoost",
+  "use_calibrated": true,
+  "rows_in_dataset": 767,
+  "rows_explained": 200,
+  "background_rows": 100,
+  "failure_rate_in_dataset": 0.21903520208604954,
+  "local_row_index_in_explain_sample": 0,
+  "local_predicted_failure_probability": 0.9041005335055126,
+  "top_10_features": [
+    {
+      "feature": "Staff_latest",
+      "mean_abs_shap": 0.0902754284883725,
+      "mean_shap": 0.006334576907589118
+    },
+    {
+      "feature": "Expenditure_latest",
+      "mean_abs_shap": 0.05469120470073407,
+      "mean_shap": 0.00041946211767503536
+    },
+    {
+      "feature": "Expenditure_trend",
+      "mean_abs_shap": 0.05006537366066763,
+      "mean_shap": 0.005771703192309467
+    },
+    {
+      "feature": "Profit_std",
+      "mean_abs_shap": 0.03388682674282845,
+      "mean_shap": 0.007498347227432578
+    },
+    {
+      "feature": "Revenue_std",
+      "mean_abs_shap": 0.03261638590630584,
+      "mean_shap": -0.003179630698201079
+    },
+    {
+      "feature": "Expenditure_mean",
+      "mean_abs_shap": 0.03044753048133109,
+      "mean_shap": -0.0037829955266895383
+    },
+    {
+      "feature": "Expenditure_std",
+      "mean_abs_shap": 0.02993406734015789,
+      "mean_shap": 0.0011067874545391725
+    },
+    {
+      "feature": "Loss_years",
+      "mean_abs_shap": 0.021210100982092812,
+      "mean_shap": -0.0011519095189143082
+    },
+    {
+      "feature": "Revenue_trend",
+      "mean_abs_shap": 0.018040944728171856,
+      "mean_shap": 0.00013424217458173608
+    },
+    {
+      "feature": "Revenue_latest",
+      "mean_abs_shap": 0.017649246224266266,
+      "mean_shap": 0.0007512310345318629
+    }
+  ],
+  "note": "This script explains the exact saved model output. If the saved model is calibrated, the SHAP values reflect the calibrated failed probability."
+}

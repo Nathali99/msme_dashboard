@@ -12,9 +12,9 @@ import shap
 import msme_training_pipeline as m
 
 
-DATASET_PATH = "/mnt/data/final_dataset.csv"
-MODEL_BUNDLE_PATH = "/mnt/data/msme_outputs/msme_model_bundle.joblib"
-OUTPUT_DIR = "/mnt/data/shap_outputs"
+DATASET_PATH = "data/final_dataset.csv"
+MODEL_BUNDLE_PATH = "msme_outputs/msme_model_bundle.joblib"
+OUTPUT_DIR = "msme_outputs/shap_outputs"
 
 # Number of rows to use for SHAP background and explanations.
 # Increase these for more stable results, decrease if runtime is slow.
@@ -27,13 +27,12 @@ ROW_TO_EXPLAIN = 0
 # Extra features for dependence plots.
 DEPENDENCE_FEATURES = ["Revenue_latest", "Expenditure_latest", "Staff_latest", "Profit_latest"]
 
-
 def load_bundle(bundle_path: str | Path) -> dict:
     bundle_path = Path(bundle_path)
     if not bundle_path.exists():
         raise FileNotFoundError(f"Saved model bundle not found: {bundle_path}")
     bundle = joblib.load(bundle_path)
-    required = {"model", "raw_input_columns", "feature_columns", "model_name", "use_calibrated"}
+    required = {"model", "raw_input_columns", "feature_columns", "model_name", "is_calibrated"}
     missing = required - set(bundle.keys())
     if missing:
         raise ValueError(f"Bundle is missing keys: {sorted(missing)}")
@@ -164,7 +163,7 @@ def main(
         "dataset_path": str(dataset_path),
         "model_bundle_path": str(model_bundle_path),
         "model_name": bundle["model_name"],
-        "use_calibrated": bool(bundle["use_calibrated"]),
+        "use_calibrated": bool(bundle["is_calibrated"]),
         "rows_in_dataset": int(len(df)),
         "rows_explained": int(len(X_explain)),
         "background_rows": int(len(background)),
@@ -182,7 +181,7 @@ def main(
         json.dump(summary, f, indent=2)
 
     print(f"Saved SHAP outputs to: {outdir}")
-    print(f"Model used: {bundle['model_name']} | calibrated: {bundle['use_calibrated']}")
+    print(f"Model used: {bundle['model_name']} | calibrated: {bundle['is_calibrated']}")
 
 
 if __name__ == "__main__":
