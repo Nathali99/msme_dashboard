@@ -18,8 +18,8 @@ OUTPUT_DIR = "msme_outputs/shap_outputs"
 
 # Number of rows to use for SHAP background and explanations.
 # Increase these for more stable results, decrease if runtime is slow.
-BACKGROUND_SIZE = 100
-EXPLAIN_SIZE = 200
+BACKGROUND_SIZE = 300
+EXPLAIN_SIZE = 400
 
 # Which explained row to create a local waterfall plot for.
 ROW_TO_EXPLAIN = 0
